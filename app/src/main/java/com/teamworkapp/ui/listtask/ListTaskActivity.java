@@ -1,5 +1,6 @@
 package com.teamworkapp.ui.listtask;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import com.teamworkapp.data.model.task.TodoItem;
 import com.teamworkapp.data.remote.TaskInterface;
 import com.teamworkapp.di.component.TaskComponent;
 import com.teamworkapp.ui.base.BaseActivity;
+import com.teamworkapp.ui.multipletask.MultipleTaskActivity;
 import com.teamworkapp.util.Logger;
 import com.teamworkapp.util.NetworkUtil;
 import com.teamworkapp.util.ui.MaterialProgressBar;
@@ -125,7 +127,12 @@ public class ListTaskActivity extends BaseActivity implements ListTaskView {
     }
 
     public void addNewTask(){
-
+        if(NetworkUtil.isConnected(getApplicationContext())) {
+            Intent intent = new Intent(this, MultipleTaskActivity.class);
+            startActivity(intent);
+        } else {
+            displayOfflineSnackbar();
+        }
     }
 
     @Override

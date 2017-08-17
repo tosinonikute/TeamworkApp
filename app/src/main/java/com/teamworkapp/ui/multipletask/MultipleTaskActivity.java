@@ -168,11 +168,8 @@ public class MultipleTaskActivity extends BaseActivity implements AddMultipleTas
     public void setProject(View view){
 
         LayoutInflater inflater = LayoutInflater.from(MultipleTaskActivity.this);
-        final View yourCustomView = inflater.inflate(R.layout.setreminder, null);
-
         AlertDialog dialog = new AlertDialog.Builder(MultipleTaskActivity.this)
                 .setTitle(getString(R.string.select_project))
-                .setView(yourCustomView)
                 .setPositiveButton(getString(R.string.set_proj_name), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         presenter.getTaskList(taskInterface, mCompositeSubscription, projectId);
@@ -202,11 +199,8 @@ public class MultipleTaskActivity extends BaseActivity implements AddMultipleTas
         }
         else if(taskItems.size() != 0) {
             LayoutInflater inflater = LayoutInflater.from(MultipleTaskActivity.this);
-            final View yourCustomView = inflater.inflate(R.layout.setreminder, null);
-
             AlertDialog dialog = new AlertDialog.Builder(MultipleTaskActivity.this)
                     .setTitle(getString(R.string.select_tasklist))
-                    .setView(yourCustomView)
                     .setPositiveButton(getString(R.string.set_task_list), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             //
