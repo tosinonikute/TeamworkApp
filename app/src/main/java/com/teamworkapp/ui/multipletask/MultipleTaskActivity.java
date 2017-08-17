@@ -301,6 +301,9 @@ public class MultipleTaskActivity extends BaseActivity implements AddMultipleTas
         return newDate;
     }
 
+
+
+
     public void addNewField(){
 
         // Programmatically Adding EditText to LinearLayout and Styling it
@@ -349,6 +352,8 @@ public class MultipleTaskActivity extends BaseActivity implements AddMultipleTas
 
     public void newTask(){
 
+        if(validation()) {
+
             // Retrieve all task titles in EditText and concatenate them
             String taskTitles = getTitles();
 
@@ -373,14 +378,7 @@ public class MultipleTaskActivity extends BaseActivity implements AddMultipleTas
             String postId = taskListId;
             presenter.addTaskList(taskInterface, multipleTask, postId, getApplicationContext());
 
-            logger.debug(taskTitles);
-            logger.debug(userId);
-            logger.debug(startDate.getText().toString());
-            logger.debug(dueDate.getText().toString());
-            logger.debug(String.valueOf(notify.isChecked()));
-            logger.debug(String.valueOf(privates.isChecked()));
-            logger.debug(String.valueOf(postId));
-
+        }
 
     }
 
@@ -411,6 +409,29 @@ public class MultipleTaskActivity extends BaseActivity implements AddMultipleTas
 
 
 
+    public boolean validation(){
+
+        EditText title = (EditText) findViewById(R.id.edittext_task_title);
+        if(title.getText().toString().equals("")){
+            snackMsg(getString(R.string.enter_title));
+
+        } else if(projectName.getText().toString().equals(getString(R.string.project_name))){
+            snackMsg(getString(R.string.enter_project));
+
+        } else if(taskType.getText().toString().equals(getString(R.string.task_list))){
+            snackMsg(getString(R.string.enter_task));
+
+        } else if(startDate.getText().toString().equals(getString(R.string.start_date))){
+            snackMsg(getString(R.string.enter_start_date));
+
+        } else if(dueDate.getText().toString().equals(getString(R.string.due_date))){
+            snackMsg(getString(R.string.enter_due_date));
+
+        } else {
+            return true;
+        }
+        return false;
+    }
 
 
     public String formatDateForward(String unformatedStr){

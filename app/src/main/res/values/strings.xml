@@ -35,8 +35,15 @@
     <string name="est_hours">hours</string>
     <string name="est_minute">minutes</string>
     <string name="est_select_time">Select Time</string>
+    
 
-
+    <!-- Add task validation -->
+    <string name="enter_title">Please enter a title</string>
+    <string name="enter_description">Please enter a description</string>
+    <string name="enter_project">Please select a project</string>
+    <string name="enter_task">Please select a task</string>
+    <string name="enter_start_date">Please choose a start date</string>
+    <string name="enter_due_date">Please choose a due date</string>
     <string name="title_activity_multiple_task">Add multiple tasks</string>
     <string name="task_title_field">Enter your task title</string>
 
