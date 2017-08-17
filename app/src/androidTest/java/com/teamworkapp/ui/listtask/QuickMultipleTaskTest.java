@@ -1,6 +1,9 @@
 package com.teamworkapp.ui.listtask;
 
 
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingPolicies;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -18,8 +21,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.concurrent.TimeUnit;
+
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
@@ -36,11 +40,16 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class QuickMultipleTaskTest {
 
+    private IdlingResource idlingResource;
+
     @Rule
     public ActivityTestRule<ListTaskActivity> mActivityTestRule = new ActivityTestRule<>(ListTaskActivity.class);
 
     @Test
     public void quickMultipleTaskTest() {
+
+        waitFor(5000); // wait for UI to load
+
         ViewInteraction actionMenuItemView = onView(
                 allOf(withId(R.id.action_new_task), withContentDescription("share"), isDisplayed()));
         actionMenuItemView.perform(click());
@@ -55,9 +64,7 @@ public class QuickMultipleTaskTest {
                 allOf(withId(R.id.edittext_task_title),
                         withParent(withId(R.id.parent_layout)),
                         isDisplayed()));
-        appCompatEditText2.perform(replaceText("my first"), closeSoftKeyboard());
-
-        pressBack();
+        appCompatEditText2.perform(replaceText("My first task"), closeSoftKeyboard());
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.add_more_button), withText(" Add more task"), isDisplayed()));
@@ -65,9 +72,10 @@ public class QuickMultipleTaskTest {
 
         ViewInteraction editText = onView(
                 allOf(withClassName(is("android.widget.EditText")), isDisplayed()));
-        editText.perform(replaceText("me"), closeSoftKeyboard());
+        editText.perform(replaceText("My second task"), closeSoftKeyboard());
 
-        pressBack();
+        waitFor(5000); // wait for UI to load
+
 
         ViewInteraction appCompatTextView = onView(
                 allOf(withText("Project"), isDisplayed()));
@@ -81,6 +89,7 @@ public class QuickMultipleTaskTest {
                                 1),
                         isDisplayed()));
         appCompatCheckedTextView.perform(click());
+
 
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(android.R.id.button1), withText("SET PROJECT NAME"),
@@ -117,6 +126,7 @@ public class QuickMultipleTaskTest {
                 allOf(withText("Start Date"), isDisplayed()));
         appCompatTextView3.perform(click());
 
+
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(android.R.id.button1), withText("OK"),
                         withParent(allOf(withClassName(is("android.widget.LinearLayout")),
@@ -128,6 +138,7 @@ public class QuickMultipleTaskTest {
                 allOf(withText("Due Date"), isDisplayed()));
         appCompatTextView4.perform(click());
 
+
         ViewInteraction appCompatButton5 = onView(
                 allOf(withId(android.R.id.button1), withText("OK"),
                         withParent(allOf(withClassName(is("android.widget.LinearLayout")),
@@ -135,9 +146,14 @@ public class QuickMultipleTaskTest {
                         isDisplayed()));
         appCompatButton5.perform(click());
 
+        waitFor(5000); // wait for UI to load
+
         ViewInteraction actionMenuItemView2 = onView(
                 allOf(withId(R.id.action_save_task), withText("SAVE"), withContentDescription("SAVE"), isDisplayed()));
         actionMenuItemView2.perform(click());
+
+
+        cleanUp();
 
     }
 
@@ -159,4 +175,20 @@ public class QuickMultipleTaskTest {
             }
         };
     }
+
+
+    public void waitFor(long waitingTime) {
+        // Make sure Espresso does not time out
+        IdlingPolicies.setMasterPolicyTimeout(waitingTime * 2, TimeUnit.MILLISECONDS);
+        IdlingPolicies.setIdlingResourceTimeout(waitingTime * 2, TimeUnit.MILLISECONDS);
+        // Now we wait
+        idlingResource = new ElapsedTimeIdlingResource(waitingTime);
+        Espresso.registerIdlingResources(idlingResource);
+    }
+
+    public void cleanUp(){
+        // Clean up
+        Espresso.unregisterIdlingResources(idlingResource);
+    }
+
 }
