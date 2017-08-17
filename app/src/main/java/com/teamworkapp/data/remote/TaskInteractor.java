@@ -2,6 +2,7 @@ package com.teamworkapp.data.remote;
 
 import android.content.Context;
 
+import com.teamworkapp.data.model.account.AccountInfo;
 import com.teamworkapp.data.model.project.Projects;
 import com.teamworkapp.data.model.task.MultipleTask;
 import com.teamworkapp.data.model.task.Task;
@@ -18,6 +19,8 @@ import rx.Observable;
  */
 
 public interface TaskInteractor {
+
+    Observable<AccountInfo> fetchAccountInfo(TaskInterface taskInterface);
 
     Observable<Task> fetchAllTask(TaskInterface taskInterface);
 

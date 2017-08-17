@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.teamworkapp.data.model.account.AccountInfo;
 import com.teamworkapp.data.model.project.Projects;
 import com.teamworkapp.data.model.task.MultipleTask;
 import com.teamworkapp.data.model.task.Task;
@@ -33,6 +34,25 @@ public class TaskInteractorImpl implements TaskInteractor {
 
     public TaskInteractorImpl(Application application) {
         this.application = application;
+    }
+
+
+    public Observable<AccountInfo> fetchAccountInfo(TaskInterface taskInterface){
+
+        return taskInterface.getAccountInfo()
+                .flatMap(new Func1<AccountInfo, Observable<AccountInfo>>() {
+                    @Override
+                    public Observable<AccountInfo> call(AccountInfo accountInfo) {
+                        return Observable.just(accountInfo);
+                    }
+                })
+                .onErrorReturn(new Func1<Throwable, AccountInfo>() {
+                    @Override
+                    public AccountInfo call(Throwable thr) {
+                        return null;
+                    }
+                });
+
     }
 
 

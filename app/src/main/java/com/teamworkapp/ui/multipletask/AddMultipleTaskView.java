@@ -16,6 +16,8 @@ public interface AddMultipleTaskView extends MvpView {
 
     void hideLoading();
 
+    void setUserId(String userId);
+
     void setProjectName(ArrayList<Project> projectNames);
 
     void setTaskLists(ArrayList<Tasklist> taskListNames);

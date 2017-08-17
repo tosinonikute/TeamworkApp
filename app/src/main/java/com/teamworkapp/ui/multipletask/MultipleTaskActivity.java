@@ -77,6 +77,7 @@ public class MultipleTaskActivity extends BaseActivity implements AddMultipleTas
     private boolean initiateSetProject;
     private String taskListId;
     private String projectId;
+    private String userId;
 
 
     @Override
@@ -127,6 +128,8 @@ public class MultipleTaskActivity extends BaseActivity implements AddMultipleTas
         if(NetworkUtil.isConnected(getApplicationContext())) {
             hideOfflineSnackBar();
             getProjectList();
+            getUserId();
+
         } else {
             displayOfflineSnackbar();
         }
@@ -136,6 +139,16 @@ public class MultipleTaskActivity extends BaseActivity implements AddMultipleTas
     public void getProjectList(){
         presenter.getProjectList(taskInterface, mCompositeSubscription);
     }
+
+
+    public void getUserId(){
+        presenter.getUserId(taskInterface, mCompositeSubscription);
+    }
+
+    public void setUserId(String userId){
+        this.userId = userId;
+    }
+
 
     public void setProjectName(ArrayList<Project> project){
         for(int i=0; i<project.size(); i++){
@@ -288,9 +301,6 @@ public class MultipleTaskActivity extends BaseActivity implements AddMultipleTas
         return newDate;
     }
 
-
-
-
     public void addNewField(){
 
         // Programmatically Adding EditText to LinearLayout and Styling it
@@ -346,7 +356,7 @@ public class MultipleTaskActivity extends BaseActivity implements AddMultipleTas
             multipleTask.setContent(taskTitles);
 
             // set user id
-            long creatorId = (long) Integer.parseInt("230907"); // Creator ID sample
+            long creatorId = (long) Integer.parseInt(userId);
             multipleTask.setCreatorId(creatorId);
 
             // Set notify and Privates SwitchCompact values when checked or Not
@@ -364,11 +374,13 @@ public class MultipleTaskActivity extends BaseActivity implements AddMultipleTas
             presenter.addTaskList(taskInterface, multipleTask, postId, getApplicationContext());
 
             logger.debug(taskTitles);
+            logger.debug(userId);
             logger.debug(startDate.getText().toString());
             logger.debug(dueDate.getText().toString());
             logger.debug(String.valueOf(notify.isChecked()));
             logger.debug(String.valueOf(privates.isChecked()));
             logger.debug(String.valueOf(postId));
+
 
     }
 
@@ -396,7 +408,6 @@ public class MultipleTaskActivity extends BaseActivity implements AddMultipleTas
 
         return sb.toString();
     }
-
 
 
 

@@ -3,6 +3,8 @@ package com.teamworkapp.ui.multipletask;
 import android.app.Application;
 import android.content.Context;
 
+import com.teamworkapp.data.model.account.Account;
+import com.teamworkapp.data.model.account.AccountInfo;
 import com.teamworkapp.data.model.project.Project;
 import com.teamworkapp.data.model.project.Projects;
 import com.teamworkapp.data.model.task.MultipleTask;
@@ -46,6 +48,29 @@ public class AddMultipleTaskPresenter extends BasePresenter<AddMultipleTaskView>
     @Override
     public void detachView(){
         super.detachView();
+    }
+
+
+    public void getUserId(TaskInterface taskInterface, CompositeSubscription mCompositeSubscription){
+
+        mCompositeSubscription.add(taskInteractor.fetchAccountInfo(taskInterface)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<AccountInfo>() {
+                    @Override
+                    public void call(AccountInfo posts) {
+
+                        Account account = posts.getAccount();
+                        getMvpView().setUserId(account.getId());
+
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        logger.debug(throwable.getLocalizedMessage());
+                    }
+                }));
+
     }
 
 
