@@ -1,6 +1,7 @@
 package com.teamworkapp.ui.listtask;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.teamworkapp.R;
 import com.teamworkapp.data.model.task.Tag;
 import com.teamworkapp.data.model.task.TodoItem;
+import com.teamworkapp.ui.edittask.EditTaskActivity;
 import com.teamworkapp.util.Logger;
 
 import java.util.ArrayList;
@@ -178,7 +180,11 @@ public class TaskListAdapter
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Context context = v.getContext();
+                Intent intent = new Intent(context, EditTaskActivity.class);
+                intent.putExtra(POSITION, holder.getAdapterPosition());
+                intent.putExtra(TODOITEM, mTodoItem);
+                context.startActivity(intent);
             }
         });
 

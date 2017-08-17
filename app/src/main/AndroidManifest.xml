@@ -22,10 +22,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.edittask.EditTaskActivity"
             android:configChanges="orientation|screenSize" />
+
+        <activity
+            android:name=".ui.multipletask.MultipleTaskActivity"
+            android:label="@string/title_activity_multiple_task"
+            android:configChanges="orientation|screenSize"/>
 
     </application>
 

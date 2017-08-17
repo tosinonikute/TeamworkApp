@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TeamworkApp</string>
+    <string name="app_name">Task List</string>
 
     <!-- no connection -->
     <string name="no_connection_snackbar">No connection !</string>
@@ -35,6 +35,11 @@
     <string name="est_hours">hours</string>
     <string name="est_minute">minutes</string>
     <string name="est_select_time">Select Time</string>
+
+
+    <string name="title_activity_multiple_task">Add multiple tasks</string>
+    <string name="task_title_field">Enter your task title</string>
+
 
 
 

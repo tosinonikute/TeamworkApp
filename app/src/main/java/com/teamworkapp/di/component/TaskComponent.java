@@ -6,6 +6,7 @@ import com.teamworkapp.di.module.TaskModule;
 import com.teamworkapp.di.scope.UserScope;
 import com.teamworkapp.ui.edittask.EditTaskActivity;
 import com.teamworkapp.ui.listtask.ListTaskActivity;
+import com.teamworkapp.ui.multipletask.MultipleTaskActivity;
 
 import dagger.Component;
 
@@ -19,5 +20,5 @@ public interface TaskComponent {
 
     void inject(ListTaskActivity listTaskActivity);
     void inject(EditTaskActivity editTaskActivity);
-
+    void inject(MultipleTaskActivity multipleTaskActivity);
 }

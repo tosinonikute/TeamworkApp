@@ -5,6 +5,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.teamworkapp.data.model.project.Projects;
+import com.teamworkapp.data.model.task.MultipleTask;
 import com.teamworkapp.data.model.task.Task;
 import com.teamworkapp.data.model.task.TaskUpdate;
 import com.teamworkapp.data.model.tasklist.Tasklists;
@@ -50,6 +51,7 @@ public class TaskInteractorImpl implements TaskInteractor {
                         return null;
                     }
                 });
+
     }
 
 
@@ -75,6 +77,7 @@ public class TaskInteractorImpl implements TaskInteractor {
         });
     }
 
+
     public Observable<Projects> fetchAllProject(TaskInterface taskInterface){
 
         return taskInterface.getAllProject()
@@ -91,6 +94,30 @@ public class TaskInteractorImpl implements TaskInteractor {
                     }
                 });
     }
+
+
+    public void addMultipleTask(TaskInterface taskInterface, MultipleTask multipleTask, String id, final Context context){
+
+        taskInterface.addMultipleTask(id, multipleTask, new Callback<Task>() {
+            @Override
+            public void success(Task info, Response response) {
+
+                if(response.getStatus() == 200 ){
+                    toastMsg("Tasks Created Successfully", context);
+                } else {
+                    toastMsg(response.getReason(), context);
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                logger.debug(error.getLocalizedMessage());
+                toastMsg(error.getLocalizedMessage().toString(), context);
+            }
+        });
+    }
+
 
     public Observable<Tasklists> fetchTaskList(TaskInterface taskInterface, String projectId){
 
@@ -110,13 +137,9 @@ public class TaskInteractorImpl implements TaskInteractor {
 
     }
 
-
-
     public void toastMsg(String str, Context context){
         Toast.makeText(context, str, Toast.LENGTH_LONG).show();
     }
-
-
 
 
 }
