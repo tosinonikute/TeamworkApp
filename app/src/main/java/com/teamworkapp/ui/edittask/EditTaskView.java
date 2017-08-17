@@ -28,4 +28,5 @@ public interface EditTaskView extends MvpView {
 
     void hideLoading();
 
+    void openListActivity();
 }

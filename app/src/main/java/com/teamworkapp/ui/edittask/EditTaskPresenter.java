@@ -54,7 +54,7 @@ public class EditTaskPresenter extends BasePresenter<EditTaskView>{
 
         getMvpView().showLoading();
         taskInteractor.updateTask(taskInterface, taskUpdate, id, context);
-
+        getMvpView().openListActivity();
     }
 
 

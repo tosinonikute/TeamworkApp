@@ -26,5 +26,16 @@
     <string name="assigned_everyone">Assigned to everyone</string>
     <string name="task_tags">Showing %1$d Tags</string>
 
+    <!-- Snackbar msg -->
+    <string name="please_select_project_first">Please select a project first</string>
+    <string name="loading_task_lists">Please wait, loading task lists</string>
+    <string name="please_select_project_new">Please select a new project</string>
+
+    <!-- estimated time -->
+    <string name="est_hours">hours</string>
+    <string name="est_minute">minutes</string>
+    <string name="est_select_time">Select Time</string>
+
+
 
 </resources>

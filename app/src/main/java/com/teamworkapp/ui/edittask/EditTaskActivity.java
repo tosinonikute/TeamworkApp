@@ -2,13 +2,13 @@ package com.teamworkapp.ui.edittask;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.teamworkapp.BaseApplication;
 import com.teamworkapp.R;
@@ -29,6 +30,7 @@ import com.teamworkapp.data.model.tasklist.Tasklist;
 import com.teamworkapp.data.remote.TaskInterface;
 import com.teamworkapp.di.component.TaskComponent;
 import com.teamworkapp.ui.base.BaseActivity;
+import com.teamworkapp.ui.listtask.ListTaskActivity;
 import com.teamworkapp.util.Logger;
 import com.teamworkapp.util.NetworkUtil;
 
@@ -65,8 +67,10 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
     private ArrayList<TodoItem> mTodoItem;
     private int position;
     private String postId;
+    private int estimatedMin = 0;
+    private boolean initiateSetProject;
 
-    private TextView title, description, projectName, taskType, tags, seekPercentage, estimated, priority;
+    private TextView title, description, projectName, taskType, tags, seekPercentage, estimated, priority, notify, privates ;
 
     private SeekBar progressSeekbar;
     private ArrayList<String> items = new ArrayList<String>();
@@ -76,6 +80,7 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
 
     private String projectId;
     private String taskListId;
+    private String priorityOption;
 
     @Override
     protected void setupActivity(TaskComponent component, Bundle savedInstanceState) {
@@ -129,8 +134,6 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
 
         startDate = (TextView) findViewById(R.id.start_date);
         dueDate = (TextView) findViewById(R.id.due_date);
-
-        SwitchCompat switchCompat = (SwitchCompat) findViewById(R.id.notify_switch);
 
         seekbarPercentage = (TextView) findViewById(R.id.seekbar_percentage);
         seekBar = (SeekBar) findViewById(R.id.progress_seekbar );
@@ -207,7 +210,12 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
 
         startDate.setText(formattedStartDate);
         dueDate.setText(formattedDueDate);
-        estimated.setText(String.valueOf(cEstimated));
+
+        int hours = cEstimated / 60;   // Hours divided by minutes
+        int minutes = cEstimated % 60;
+
+        estimated.setText(String.valueOf(hours) + " " + getString(R.string.est_hours) + " " + minutes + " " + getString(R.string.est_minute));
+
         priority.setText(cPriority);
         projectId = mTodoItem.get(position).getProjectId().toString();
 
@@ -216,17 +224,17 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
 
     public void updateTask(){
 
-        EditTask ss = new EditTask();
-        ss.setContent(title.getText().toString());
-        ss.setDescription(description.getText().toString());
-        ss.setDueDate(formatDateBackward(dueDate.getText().toString()));
-        ss.setPriority(priority.getText().toString());
-        ss.setProgress(seekbarPercentage.getText().toString().replace("%", ""));
-        ss.setResponsiblePartyId("999");
-        ss.setStartDate(formatDateBackward(startDate.getText().toString()));
-        ss.setTags(tags.getText().toString());
+        EditTask editTask = new EditTask();
+        editTask.setContent(title.getText().toString());
+        editTask.setDescription(description.getText().toString());
+        editTask.setDueDate(formatDateBackward(dueDate.getText().toString()));
+        editTask.setPriority(priority.getText().toString());
+        editTask.setProgress(seekbarPercentage.getText().toString().replace("%", ""));
+        editTask.setResponsiblePartyId("999");
+        editTask.setStartDate(formatDateBackward(startDate.getText().toString()));
+        editTask.setEstimatedMinutes(String.valueOf(estimatedMin));
 
-        TaskUpdate tu = new TaskUpdate(ss);
+        TaskUpdate tu = new TaskUpdate(editTask);
         presenter.updateTaskList(taskInterface, tu, postId, getApplicationContext());
 
     }
@@ -260,9 +268,9 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
         final View yourCustomView = inflater.inflate(R.layout.setreminder, null);
 
         AlertDialog dialog = new AlertDialog.Builder(EditTaskActivity.this)
-                .setTitle("Select a Projects")
+                .setTitle(getString(R.string.select_project))
                 .setView(yourCustomView)
-                .setPositiveButton("SET PROJECT NAME", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.set_proj_name), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         presenter.getTaskList(taskInterface, mCompositeSubscription, projectId);
                     }
@@ -271,8 +279,9 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
 
                 .setSingleChoiceItems(items.toArray(new String[items.size()]), -1, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        Log.d("CustomDialog", String.valueOf(item));
+                        logger.debug(items.get(item).toString());
                         projectName.setText(items.get(item).toString());
+                        initiateSetProject = true;
                     }
                 })
 
@@ -285,16 +294,16 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
     public void setTaskList(View view){
 
         if(projectName.getText().toString().equals(getResources().getString(R.string.project_name))){
-            snackMsg("Please select a project first");
+            snackMsg(getString(R.string.please_select_project_first));
         }
         else if(taskItems.size() != 0) {
             LayoutInflater inflater = LayoutInflater.from(EditTaskActivity.this);
             final View yourCustomView = inflater.inflate(R.layout.setreminder, null);
 
             AlertDialog dialog = new AlertDialog.Builder(EditTaskActivity.this)
-                    .setTitle("Select a Projects")
+                    .setTitle(getString(R.string.select_tasklist))
                     .setView(yourCustomView)
-                    .setPositiveButton("SET TASK LIST", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.set_task_list), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             //
                         }
@@ -302,24 +311,61 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
                     .setNegativeButton("Cancel", null)
                     .setSingleChoiceItems(taskItems.toArray(new String[taskItems.size()]), -1, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int item) {
-                            Log.d("CustomDialog", String.valueOf(item));
+                            logger.debug(items.get(item).toString());
                             taskType.setText(taskItems.get(item).toString());
                             taskListId = taskItemList.get(item).getId();
                         }
                     })
                     .create();
             dialog.show();
+
+        } else if(!initiateSetProject) {
+            snackMsg(getString(R.string.please_select_project_new));
+
         } else {
-            snackMsg("Please wait, loading task lists");
+            snackMsg(getString(R.string.loading_task_lists));
         }
     }
 
-    public void setTags(View view){
 
+    public void setPriority(View view){
+
+        final ArrayList<String> priorityItems = new ArrayList<String>();
+        priorityItems.add("High");
+        priorityItems.add("Medium");
+        priorityItems.add("Low");
+        priorityItems.add("No Priority");
+
+        if(priorityItems.size() != 0) {
+            LayoutInflater inflater = LayoutInflater.from(EditTaskActivity.this);
+            final View yourCustomView = inflater.inflate(R.layout.setreminder, null);
+
+            AlertDialog dialog = new AlertDialog.Builder(EditTaskActivity.this)
+                    .setTitle(getString(R.string.select_priority))
+                    .setView(yourCustomView)
+                    .setSingleChoiceItems(priorityItems.toArray(new String[priorityItems.size()]), -1, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int item) {
+                            logger.debug(priorityItems.get(item).toString());
+                            priority.setText(priorityItems.get(item).toString());
+                            priorityOption = priorityItems.get(item);
+                            dialog.dismiss();
+                        }
+                    })
+                    .create();
+            dialog.show();
+        }
     }
 
-    public void setColumn(View view){
 
+
+    public void setTags(View view){
+        if(mTodoItem.get(position).getTags() != null) {
+            snackMsg(getString(R.string.task_tags, mTodoItem.get(position).getTags().size()));
+        }
+    }
+
+    public void setAssigned(View view){
+        snackMsg(getString(R.string.assigned_everyone));
     }
 
 
@@ -374,15 +420,38 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
                 }
             };
 
+
     private void showStartDate(int year, int month, int day) {
         startDate.setText(new StringBuilder().append(convert(day)).append("/")
                 .append(convert(month)).append("/").append(year));
     }
 
+
     private void showDueDate(int year, int month, int day) {
         dueDate.setText(new StringBuilder().append(convert(day)).append("/")
                 .append(convert(month)).append("/").append(year));
     }
+
+
+    public void setEstimated(View view){
+
+        Calendar currentTime = Calendar.getInstance();
+        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = currentTime.get(Calendar.MINUTE);
+
+        TimePickerDialog timePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                estimated.setText( "" + selectedHour + " " + getString(R.string.est_hours) + " " + selectedMinute + " " + getString(R.string.est_minute));
+                estimatedMin = (selectedHour * 60) + selectedMinute;
+            }
+        }, hour, minute, true);
+
+        timePicker.setTitle(getString(R.string.est_select_time));
+        timePicker.show();
+
+    }
+
 
     public String convert(int dates){
         String newDate = String.valueOf(dates);
@@ -391,28 +460,24 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
     }
 
 
-    public void setEstimated(View view){
-
-    }
-
-    public void setPriority(View view){
-
-    }
-
     public String formatDateForward(String unformatedStr){
         String formatted = "";
-        formatted = unformatedStr.substring(6);
-        formatted = formatted + "/" + unformatedStr.substring(4,6);
-        formatted = formatted + "/" + unformatedStr.substring(0,4);
+        if(unformatedStr.length() > 5) {
+            formatted = unformatedStr.substring(6);
+            formatted = formatted + "/" + unformatedStr.substring(4, 6);
+            formatted = formatted + "/" + unformatedStr.substring(0, 4);
+        }
         return formatted;
     }
 
     public String formatDateBackward(String unformatedStr){
         String formatted = "";
-        unformatedStr = unformatedStr.replace("/","");
-        formatted = unformatedStr.substring(4);
-        formatted = formatted + unformatedStr.substring(2,4);
-        formatted = formatted + unformatedStr.substring(0,2);
+        if(unformatedStr.length() > 5) {
+            unformatedStr = unformatedStr.replace("/", "");
+            formatted = unformatedStr.substring(4);
+            formatted = formatted + unformatedStr.substring(2, 4);
+            formatted = formatted + unformatedStr.substring(0, 2);
+        }
         return formatted;
     }
 
@@ -452,6 +517,11 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
 
     public void hideLoading(){
 
+    }
+
+    public void openListActivity(){
+        Intent intent = new Intent(getApplicationContext(), ListTaskActivity.class);
+        startActivity(intent);
     }
 
 
