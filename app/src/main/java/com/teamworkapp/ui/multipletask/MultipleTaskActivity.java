@@ -159,6 +159,7 @@ public class MultipleTaskActivity extends BaseActivity implements AddMultipleTas
 
     public void setTaskLists(ArrayList<Tasklist> taskListNames){
         taskItemList = taskListNames;
+        taskItems.clear();
         for(int i=0; i<taskListNames.size(); i++){
             taskItems.add(taskListNames.get(i).getName().toString());
         }
