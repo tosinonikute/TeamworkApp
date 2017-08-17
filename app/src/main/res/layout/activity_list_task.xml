@@ -36,6 +36,8 @@
     </android.support.design.widget.AppBarLayout>
 
 
+
+
     <!-- content -->
 
     <com.teamworkapp.util.ui.MaterialProgressBar
@@ -46,6 +48,38 @@
         android:layout_gravity="center"
         android:visibility="gone"
         />
+
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/task_list_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/add_new_task_button_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:background="@color/colorRedDark"
+            android:textSize="12sp"
+            android:textColor="@color/colorWhite"
+            android:layout_gravity="center"
+            android:text="Add New Task"/>
+
+
+    </LinearLayout>
+
 
 
 </LinearLayout>

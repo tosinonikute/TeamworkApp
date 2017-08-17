@@ -3,6 +3,7 @@ package com.teamworkapp.ui.listtask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,57 +14,84 @@ import android.widget.TextView;
 
 import com.teamworkapp.BaseApplication;
 import com.teamworkapp.R;
+import com.teamworkapp.data.model.task.TodoItem;
 import com.teamworkapp.data.remote.TaskInterface;
 import com.teamworkapp.di.component.TaskComponent;
 import com.teamworkapp.ui.base.BaseActivity;
 import com.teamworkapp.util.Logger;
+import com.teamworkapp.util.NetworkUtil;
 import com.teamworkapp.util.ui.MaterialProgressBar;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import rx.subscriptions.CompositeSubscription;
+
 public class ListTaskActivity extends BaseActivity implements ListTaskView {
 
+    @Inject
+    ListTaskPresenter presenter;
 
     @Inject
     TaskInterface taskInterface;
 
     private Logger logger = Logger.getLogger(getClass());
+    private CompositeSubscription mCompositeSubscription;
     private LinearLayout mainLayout;
-
-    private LinearLayoutManager layoutManager;
+    private TaskListAdapter adapter;
+    private RecyclerView recyclerView;
     private MaterialProgressBar progressBar;
+    private LinearLayoutManager layoutManager;
     private Snackbar snackbarOffline;
+
 
     @Override
     protected void setupActivity(TaskComponent component, Bundle savedInstanceState) {
         setContentView(R.layout.activity_list_task);
         ((BaseApplication) getApplication()).getComponent().inject(this);
-
+        presenter.attachView(this);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-
+        mCompositeSubscription = new CompositeSubscription();
         init();
         loadView();
 
+
     }
 
-    public void init(){
+    // Initialize the view
+    public void init() {
         progressBar = (MaterialProgressBar) findViewById(R.id.material_progress_bar);
         mainLayout = (LinearLayout) findViewById(R.id.main_layout);
         layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView = (RecyclerView) findViewById(R.id.task_list_recyclerview);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     public void loadView(){
-
+        if(NetworkUtil.isConnected(getApplicationContext())) {
+            taskList();
+            hideOfflineSnackBar();
+        } else {
+            displayOfflineSnackbar();
+        }
     }
 
-    public void addNewTask(){
-
+    public void taskList(){
+        presenter.getTaskList(taskInterface, mCompositeSubscription);
     }
 
+    public void setAdapter(ArrayList<TodoItem> todoItemsList){
+        if(todoItemsList.size() > 0) {
+            adapter = new TaskListAdapter(getApplicationContext(), todoItemsList);
+            recyclerView.setAdapter(adapter); // set adapter on recyclerview
+        }
+    }
 
     public void displayOfflineSnackbar() {
         snackbarOffline = Snackbar.make(mainLayout, R.string.no_connection_snackbar, Snackbar.LENGTH_INDEFINITE);
@@ -86,6 +114,28 @@ public class ListTaskActivity extends BaseActivity implements ListTaskView {
     }
 
 
+    @Override
+    public void showLoading(){
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoading(){
+        progressBar.setVisibility(View.GONE);
+    }
+
+    public void addNewTask(){
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mCompositeSubscription.hasSubscriptions()) {
+            mCompositeSubscription.unsubscribe();
+        }
+        super.onDestroy();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,4 +157,8 @@ public class ListTaskActivity extends BaseActivity implements ListTaskView {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
 }
