@@ -5,10 +5,26 @@
     <string name="no_connection_snackbar">No connection !</string>
     <string name="snackbar_action_retry">Retry</string>
 
+    <!-- TextViews -->
+    <string name="project_name">No Project Selected</string>
+    <string name="task_list">No Task List Selected</string>
+    <string name="start_date">No Start Date Selected</string>
+    <string name="due_date">No Due Date Selected</string>
+
     <!-- adapter -->
     <string name="created_by">Created By </string>
     <string name="progress"> Progress: </string>
     <string name="project">Project: </string>
+
+    <!-- Edit Task -->
+    <string name="select_project">Select a Project</string>
+    <string name="set_proj_name">SET PROJECT NAME</string>
+    <string name="select_tasklist">Select a TaskList</string>
+    <string name="set_task_list">SET TASK LIST</string>
+    <string name="select_priority">Priority</string>
+    <string name="set_priority">SET PRIORITY</string>
+    <string name="assigned_everyone">Assigned to everyone</string>
+    <string name="task_tags">Showing %1$d Tags</string>
 
 
 </resources>
