@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TeamworkApp</string>
+
+    <!-- no connection -->
+    <string name="no_connection_snackbar">No connection !</string>
+    <string name="snackbar_action_retry">Retry</string>
+
+
 </resources>
