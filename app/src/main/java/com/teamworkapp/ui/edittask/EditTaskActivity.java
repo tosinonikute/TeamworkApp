@@ -332,11 +332,8 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
 
         if(priorityItems.size() != 0) {
             LayoutInflater inflater = LayoutInflater.from(EditTaskActivity.this);
-            final View yourCustomView = inflater.inflate(R.layout.setreminder, null);
-
             AlertDialog dialog = new AlertDialog.Builder(EditTaskActivity.this)
                     .setTitle(getString(R.string.select_priority))
-                    .setView(yourCustomView)
                     .setSingleChoiceItems(priorityItems.toArray(new String[priorityItems.size()]), -1, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int item) {
                             logger.debug(priorityItems.get(item).toString());
