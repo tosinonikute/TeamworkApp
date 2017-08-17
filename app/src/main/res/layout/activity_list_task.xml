@@ -36,4 +36,16 @@
     </android.support.design.widget.AppBarLayout>
 
 
+    <!-- content -->
+
+    <com.teamworkapp.util.ui.MaterialProgressBar
+        android:id="@+id/material_progress_bar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="170dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        />
+
+
 </LinearLayout>

@@ -17,6 +17,7 @@ import com.teamworkapp.data.remote.TaskInterface;
 import com.teamworkapp.di.component.TaskComponent;
 import com.teamworkapp.ui.base.BaseActivity;
 import com.teamworkapp.util.Logger;
+import com.teamworkapp.util.ui.MaterialProgressBar;
 
 import javax.inject.Inject;
 
@@ -30,6 +31,7 @@ public class ListTaskActivity extends BaseActivity implements ListTaskView {
     private LinearLayout mainLayout;
 
     private LinearLayoutManager layoutManager;
+    private MaterialProgressBar progressBar;
     private Snackbar snackbarOffline;
 
     @Override
@@ -49,6 +51,7 @@ public class ListTaskActivity extends BaseActivity implements ListTaskView {
     }
 
     public void init(){
+        progressBar = (MaterialProgressBar) findViewById(R.id.material_progress_bar);
         mainLayout = (LinearLayout) findViewById(R.id.main_layout);
         layoutManager = new LinearLayoutManager(getApplicationContext());
     }
