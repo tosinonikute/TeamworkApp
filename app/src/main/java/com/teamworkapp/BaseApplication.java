@@ -9,8 +9,6 @@ import com.teamworkapp.di.component.TaskComponent;
 import com.teamworkapp.di.module.AppModule;
 import com.teamworkapp.di.module.NetModule;
 import com.teamworkapp.di.module.RetrofitModule;
-import com.teamworkapp.di.module.TaskFetcherModule;
-import com.teamworkapp.di.module.TaskModule;
 
 
 /**
