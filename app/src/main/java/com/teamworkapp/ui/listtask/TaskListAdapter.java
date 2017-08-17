@@ -3,9 +3,11 @@ package com.teamworkapp.ui.listtask;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.teamworkapp.R;
@@ -37,6 +39,10 @@ public class TaskListAdapter
     private String ctodoName;
     private String creatorName;
     private String progress;
+
+    private String POSITION = "position";
+    private String TODOITEM = "mTodoItem";
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
@@ -150,7 +156,22 @@ public class TaskListAdapter
         holder.projectTitle.setText(mContext.getResources().getString(R.string.project) + cProjectName);
 
         holder.layout.removeAllViews();
+        for(int i = 0; i<ctag.size(); i++) {
 
+            TextView tagTextView = new TextView(mContext);
+            tagTextView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            llp.setMargins(15, 0, 5, 5);
+
+            tagTextView.setText(ctag.get(i).getName());
+            tagTextView.setTextColor(mContext.getResources().getColor(R.color.colorWhite));
+            tagTextView.setTextSize(10);
+            tagTextView.setPadding(5, 5, 5, 5);
+            tagTextView.setGravity(Gravity.LEFT);
+            tagTextView.setBackgroundColor(mContext.getResources().getColor(R.color.colorAsh));
+            tagTextView.setLayoutParams(llp);
+            holder.layout.addView(tagTextView);
+        }
 
 
         // launch the edit task activity to show Task information
