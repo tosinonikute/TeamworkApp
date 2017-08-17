@@ -8,9 +8,9 @@ A way to quickly add multiple tasks.
 -  Rxjava and Retrofit for Network calls
 -  Use Gradle to build, jCenter/Maven Central for dependencies (no .jar dependencies)
 
-### Allows you to add tasks quickly by clicking on the Quick Task + button at the top right of the toolbar
+#### Allows you to add tasks quickly by clicking on the Quick Task + button at the top right of the toolbar
 
-### It also Allows you to Edit tasks quickly by clicking on the + Icon button at the top right of the toolbar
+#### It also Allows you to Edit tasks quickly by tapping on an item on the list
 
 Screenshots Below:
 
